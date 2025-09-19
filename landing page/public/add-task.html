@@ -1,30 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Pulse - Add Task</title>
+    <title>Group project task claimer - Add Task</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .form-container { max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text); }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1rem; }
-        .form-group textarea { resize: vertical; min-height: 100px; }
-        .form-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; }
-        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-secondary { background: var(--secondary); color: white; }
-        .success-message { background: #dcfce7; color: #16a34a; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; }
-        .error-message { background: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; }
+        .form-container {
+            /* max-width: 600px; */
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="logo">
             <i class="fas fa-tasks"></i>
-            <span>Project Pulse</span>
+            <span>Group project task claimer</span>
         </div>
         <nav>
             <ul>
@@ -71,7 +140,7 @@
                 <div id="success-message" class="success-message">
                     <i class="fas fa-check-circle"></i> Task created successfully!
                 </div>
-                
+
                 <div id="error-message" class="error-message">
                     <i class="fas fa-exclamation-circle"></i> <span id="error-text"></span>
                 </div>
@@ -84,7 +153,8 @@
 
                     <div class="form-group">
                         <label for="description">Description *</label>
-                        <textarea id="description" name="description" required placeholder="Describe the task in detail"></textarea>
+                        <textarea id="description" name="description" required
+                            placeholder="Describe the task in detail"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -157,34 +227,34 @@
         // Handle form submission
         document.getElementById('addTaskForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formData = new FormData(e.target);
             const taskData = Object.fromEntries(formData);
-            
+
             // Show loading state
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
             submitBtn.disabled = true;
-            
+
             try {
                 const response = await fetch('/api/tasks', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(taskData)
                 });
-                
+
                 if (response.ok) {
                     // Show success message
                     document.getElementById('success-message').style.display = 'block';
                     document.getElementById('error-message').style.display = 'none';
-                    
+
                     // Reset form
                     e.target.reset();
-                    
+
                     // Scroll to top
                     window.scrollTo(0, 0);
-                    
+
                     // Hide success message after 3 seconds
                     setTimeout(() => {
                         document.getElementById('success-message').style.display = 'none';
@@ -207,24 +277,24 @@
         });
 
         // Profile dropdown functionality
-        document.querySelector('.profile-dropdown').addEventListener('click', function(e) {
+        document.querySelector('.profile-dropdown').addEventListener('click', function (e) {
             e.stopPropagation();
             document.querySelector('.dropdown-menu').classList.toggle('show');
         });
 
-        document.addEventListener('click', function() {
+        document.addEventListener('click', function () {
             document.querySelector('.dropdown-menu').classList.remove('show');
         });
 
         // Logout
-        document.getElementById('logout').addEventListener('click', function(e) {
+        document.getElementById('logout').addEventListener('click', function (e) {
             e.preventDefault();
             localStorage.removeItem('user');
             window.location.href = '/auth.html';
         });
 
         // Edit profile
-        document.getElementById('edit-profile').addEventListener('click', function(e) {
+        document.getElementById('edit-profile').addEventListener('click', function (e) {
             e.preventDefault();
             const newName = prompt('Enter new name:', currentUser.name);
             if (newName && newName.trim()) {
@@ -235,9 +305,11 @@
         });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             checkAuth();
         });
     </script>
+    <script src="notifications.js"></script>
 </body>
+
 </html>

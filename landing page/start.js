@@ -5,7 +5,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3001;
 
-console.log('🚀 Starting Project Pulse...');
+console.log('🚀 Starting Group project task claimer...');
 console.log(`📍 Server will be available at: http://localhost:${PORT}`);
 console.log('📝 Press Ctrl+C to stop the server\n');
 

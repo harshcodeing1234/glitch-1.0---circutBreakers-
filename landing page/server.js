@@ -93,7 +93,7 @@ app.post('/api/register', (req, res) => {
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
   
-  db.get("SELECT * FROM users WHERE email = ? AND password = ?", [email, password], (err, row) => {
+  db.get("SELECT * FROM users WHERE email = ? AND password = ?", [email.trim(), password.trim()], (err, row) => {
     if (err) return res.status(500).json({ error: err.message });
     
     if (!row) {
@@ -437,22 +437,54 @@ app.get('/api/notifications/:userId', (req, res) => {
   
   // Get tasks due soon for the user
   const query = `
-    SELECT title, due_date, priority
+    SELECT title, due_date, priority, status
     FROM tasks 
     WHERE claimed_by_id = ? 
-    AND date(due_date) <= date('now', '+3 days')
+    AND date(due_date) <= date('now', '+7 days')
     ORDER BY due_date ASC
   `;
   
   db.all(query, [userId], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     
-    const notifications = rows.map(task => ({
-      type: 'deadline',
-      message: `Task "${task.title}" is due ${task.due_date}`,
-      priority: task.priority,
-      date: task.due_date
-    }));
+    const notifications = [];
+    
+    // Add task deadline notifications
+    rows.forEach(task => {
+      const dueDate = new Date(task.due_date);
+      const today = new Date();
+      const diffTime = dueDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 1) {
+        notifications.push({
+          type: 'urgent',
+          message: `⚠️ Task "${task.title}" is due ${diffDays === 0 ? 'today' : 'tomorrow'}!`,
+          priority: 'high'
+        });
+      } else if (diffDays <= 3) {
+        notifications.push({
+          type: 'reminder',
+          message: `📅 Task "${task.title}" is due in ${diffDays} days`,
+          priority: 'medium'
+        });
+      }
+    });
+    
+    // Add general notifications for all users
+    notifications.push({
+      type: 'info',
+      message: '👋 Welcome to Group project task claimer!',
+      priority: 'low'
+    });
+    
+    if (rows.length === 0) {
+      notifications.push({
+        type: 'suggestion',
+        message: '💡 Claim some tasks to get started!',
+        priority: 'low'
+      });
+    }
     
     res.json(notifications);
   });

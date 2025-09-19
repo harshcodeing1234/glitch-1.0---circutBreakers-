@@ -1,51 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Pulse - Team</title>
+    <title>Group project task claimer - Team</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .add-member-btn { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; }
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .member-card { background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
-        .member-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1rem; }
-        .member-name { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .member-email { color: var(--text-light); margin-bottom: 1rem; }
-        .member-stats { display: flex; justify-content: space-around; margin-bottom: 1rem; }
-        .stat { text-align: center; }
-        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .stat-label { font-size: 0.875rem; color: var(--text-light); }
-        .member-actions { display: flex; gap: 0.5rem; justify-content: center; }
-        .btn-small { padding: 0.375rem 0.75rem; font-size: 0.875rem; border: none; border-radius: 0.375rem; cursor: pointer; }
-        .btn-view { background: var(--primary); color: white; }
-        .btn-remove { background: var(--danger); color: white; }
-        .team-summary { background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-        .summary-item { text-align: center; }
-        .summary-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
-        .summary-label { color: var(--text-light); margin-top: 0.25rem; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
-        .modal-content { background: white; margin: 5% auto; padding: 2rem; border-radius: 0.75rem; width: 90%; max-width: 500px; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; }
-        .form-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; }
-        .member-tasks { margin-top: 1rem; }
-        .task-item { background: var(--background); padding: 0.5rem; border-radius: 0.375rem; margin-bottom: 0.5rem; font-size: 0.875rem; }
-        .task-priority { padding: 0.125rem 0.5rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; }
-        .priority-high { background: #fee2e2; color: #dc2626; }
-        .priority-medium { background: #fef3c7; color: #d97706; }
-        .priority-low { background: #dcfce7; color: #16a34a; }
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .add-member-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .member-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+        }
+
+        .member-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-email {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .member-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-small {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+
+        .btn-view {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-remove {
+            background: var(--danger);
+            color: white;
+        }
+
+        .team-summary {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .summary-label {
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .member-tasks {
+            margin-top: 1rem;
+        }
+
+        .task-item {
+            background: var(--background);
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .task-priority {
+            padding: 0.125rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="logo">
             <i class="fas fa-tasks"></i>
-            <span>Project Pulse</span>
+            <span>Group project task claimer</span>
         </div>
         <nav>
             <ul>
@@ -135,17 +306,17 @@
                     <label for="member-name">Full Name</label>
                     <input type="text" id="member-name" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="member-email">Email</label>
                     <input type="email" id="member-email" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="member-password">Password</label>
                     <input type="password" id="member-password" required>
                 </div>
-                
+
                 <div class="form-actions">
                     <button type="button" class="btn-small" onclick="closeMemberModal()">Cancel</button>
                     <button type="submit" class="btn-small btn-view">Add Member</button>
@@ -199,10 +370,10 @@
                     fetch('/api/users'),
                     fetch('/api/tasks')
                 ]);
-                
+
                 users = await usersResponse.json();
                 tasks = await tasksResponse.json();
-                
+
                 updateSummary();
                 renderTeamMembers();
             } catch (error) {
@@ -282,7 +453,7 @@
         function viewMemberDetails(userId) {
             const user = users.find(u => u.id === userId);
             const userTasks = tasks.filter(t => t.claimed_by_id === userId);
-            
+
             const content = document.getElementById('member-details-content');
             content.innerHTML = `
                 <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -307,7 +478,7 @@
                     `).join('') : '<p style="color: var(--text-light);">No tasks assigned</p>'}
                 </div>
             `;
-            
+
             document.getElementById('details-title').textContent = `${user.name} - Details`;
             document.getElementById('memberDetailsModal').style.display = 'block';
         }
@@ -333,20 +504,20 @@
         // Handle member form submission
         document.getElementById('memberForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const memberData = {
                 name: document.getElementById('member-name').value,
                 email: document.getElementById('member-email').value,
                 password: document.getElementById('member-password').value
             };
-            
+
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(memberData)
                 });
-                
+
                 if (response.ok) {
                     closeMemberModal();
                     loadData();
@@ -360,24 +531,24 @@
         });
 
         // Profile dropdown
-        document.querySelector('.profile-dropdown').addEventListener('click', function(e) {
+        document.querySelector('.profile-dropdown').addEventListener('click', function (e) {
             e.stopPropagation();
             document.querySelector('.dropdown-menu').classList.toggle('show');
         });
 
-        document.addEventListener('click', function() {
+        document.addEventListener('click', function () {
             document.querySelector('.dropdown-menu').classList.remove('show');
         });
 
         // Logout
-        document.getElementById('logout').addEventListener('click', function(e) {
+        document.getElementById('logout').addEventListener('click', function (e) {
             e.preventDefault();
             localStorage.removeItem('user');
             window.location.href = '/auth.html';
         });
 
         // Edit profile
-        document.getElementById('edit-profile').addEventListener('click', function(e) {
+        document.getElementById('edit-profile').addEventListener('click', function (e) {
             e.preventDefault();
             const newName = prompt('Enter new name:', currentUser.name);
             if (newName && newName.trim()) {
@@ -388,7 +559,7 @@
         });
 
         // Close modals when clicking outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const memberModal = document.getElementById('memberModal');
             const detailsModal = document.getElementById('memberDetailsModal');
             if (event.target === memberModal) {
@@ -400,11 +571,13 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             if (checkAuth()) {
                 loadData();
             }
         });
     </script>
+    <script src="notifications.js"></script>
 </body>
+
 </html>

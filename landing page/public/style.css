@@ -30,11 +30,18 @@ body {
 /* Sidebar */
 .sidebar {
     width: 250px;
-    background: var(--sidebar-bg);
-    color: white;
+    background: white;
+    color: var(--text);
     position: fixed;
     height: 100vh;
     overflow-y: auto;
+    border-right: 1px solid var(--border);
+    transition: transform 0.3s ease, width 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
 }
 
 .logo {
@@ -44,7 +51,7 @@ body {
     gap: 0.75rem;
     font-size: 1.25rem;
     font-weight: 700;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid var(--border);
 }
 
 .logo i {
@@ -64,21 +71,23 @@ nav li {
 nav a {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
-    color: #cbd5e1;
+    padding: 12px 20px;
+    color: #4b5563;
     text-decoration: none;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 4px 8px;
+    gap: 0.75rem;
 }
 
 nav a:hover {
-    background: #334155;
-    color: white;
+    background-color: #f3f4f6;
+    color: #2563eb;
 }
 
 nav a.active {
-    background: var(--primary);
-    color: white;
+    background-color: #dbeafe;
+    color: #2563eb;
 }
 
 nav a i {
@@ -96,7 +105,7 @@ nav a i {
 
 /* Header */
 header {
-    background: var(--card-bg);
+    background: white;
     padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--border);
     display: flex;
