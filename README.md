@@ -1,4 +1,4 @@
-# 🚀 Project Pulse - Task Management System
+# 🚀 Group project task claimer
 
 A modern, responsive web application designed to solve task distribution confusion in group projects through transparent task claiming and real-time collaboration.
 
@@ -24,7 +24,7 @@ In group projects, team members often face:
 
 ## 💡 Solution
 
-**Project Pulse** provides a centralized platform where:
+**Group project task claimer** provides a centralized platform where:
 - ✅ **Clear Task Ownership** - Visual indication of who claimed what
 - 🔄 **Real-time Updates** - Instant synchronization across team
 - 📊 **Progress Tracking** - Dashboard with project statistics
