@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Project Pulse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-tasks"></i>
+            <span>Project Pulse</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="add-task.html"><i class="fas fa-plus"></i> Add Task</a></li>
+                <li><a href="analytics.html" class="active"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="team.html"><i class="fas fa-users"></i> Team</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <h1>Analytics</h1>
+                <p>Project performance insights</p>
+            </div>
+            <div class="header-right">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="profile">
+                    <img src="https://via.placeholder.com/40" alt="Profile">
+                    <div class="profile-info">
+                        <span class="name">John Doe</span>
+                        <span class="role">Project Manager</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3>Task Completion Rate</h3>
+                    <div class="progress-circle">
+                        <span class="percentage">75%</span>
+                    </div>
+                    <p>18 of 24 tasks completed</p>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Team Performance</h3>
+                    <div class="performance-bars">
+                        <div class="bar-item">
+                            <span>Sarah</span>
+                            <div class="bar"><div class="fill" style="width: 90%"></div></div>
+                        </div>
+                        <div class="bar-item">
+                            <span>Mike</span>
+                            <div class="bar"><div class="fill" style="width: 75%"></div></div>
+                        </div>
+                        <div class="bar-item">
+                            <span>Emma</span>
+                            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Priority Distribution</h3>
+                    <div class="priority-stats">
+                        <div class="priority-item">
+                            <span class="priority-dot high"></span>
+                            <span>High: 8 tasks</span>
+                        </div>
+                        <div class="priority-item">
+                            <span class="priority-dot medium"></span>
+                            <span>Medium: 10 tasks</span>
+                        </div>
+                        <div class="priority-item">
+                            <span class="priority-dot low"></span>
+                            <span>Low: 6 tasks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Weekly Progress</h3>
+                    <div class="weekly-chart">
+                        <div class="week-bar" style="height: 60%">Mon</div>
+                        <div class="week-bar" style="height: 80%">Tue</div>
+                        <div class="week-bar" style="height: 45%">Wed</div>
+                        <div class="week-bar" style="height: 90%">Thu</div>
+                        <div class="week-bar" style="height: 70%">Fri</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-card h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+        }
+
+        .progress-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 75%, var(--border) 75%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            width: 80px;
+            height: 80px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .percentage {
+            font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .performance-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bar-item span {
+            width: 60px;
+            font-size: 0.875rem;
+        }
+
+        .bar {
+            flex: 1;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .priority-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .priority-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .priority-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .priority-dot.high { background: #dc2626; }
+        .priority-dot.medium { background: #d97706; }
+        .priority-dot.low { background: #16a34a; }
+
+        .weekly-chart {
+            display: flex;
+            align-items: end;
+            gap: 1rem;
+            height: 120px;
+        }
+
+        .week-bar {
+            flex: 1;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            padding-bottom: 0.5rem;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
