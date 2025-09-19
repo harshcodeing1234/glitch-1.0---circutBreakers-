@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Pulse - Add Task</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .form-container { max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text); }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1rem; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .success-message { background: #dcfce7; color: #16a34a; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; }
+        .error-message { background: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-tasks"></i>
+            <span>Project Pulse</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="/add-task.html" class="active"><i class="fas fa-plus"></i> Add Task</a></li>
+                <li><a href="/analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="/team.html"><i class="fas fa-users"></i> Team</a></li>
+                <li><a href="/settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <h1>Add New Task</h1>
+                <p>Create a new task for your project</p>
+            </div>
+            <div class="header-right">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="profile">
+                    <img src="https://via.placeholder.com/40" alt="Profile" id="profile-img">
+                    <div class="profile-info">
+                        <span class="name" id="user-name">Loading...</span>
+                        <span class="role">Team Member</span>
+                    </div>
+                    <div class="profile-dropdown">
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown-menu">
+                            <a href="#" id="edit-profile">Edit Profile</a>
+                            <a href="#" id="logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <div id="success-message" class="success-message">
+                    <i class="fas fa-check-circle"></i> Task created successfully!
+                </div>
+                
+                <div id="error-message" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i> <span id="error-text"></span>
+                </div>
+
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="title">Task Title *</label>
+                        <input type="text" id="title" name="title" required placeholder="Enter task title">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <textarea id="description" name="description" required placeholder="Describe the task in detail"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priority">Priority *</label>
+                        <select id="priority" name="priority" required>
+                            <option value="">Select priority</option>
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="due_date">Due Date *</label>
+                        <input type="date" id="due_date" name="due_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category">
+                            <option value="">Select category</option>
+                            <option value="development">Development</option>
+                            <option value="design">Design</option>
+                            <option value="testing">Testing</option>
+                            <option value="documentation">Documentation</option>
+                            <option value="deployment">Deployment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='/tasks.html'">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // Check authentication
+        function checkAuth() {
+            const userData = localStorage.getItem('user');
+            if (!userData) {
+                window.location.href = '/auth.html';
+                return false;
+            }
+            currentUser = JSON.parse(userData);
+            updateUserProfile();
+            return true;
+        }
+
+        // Update user profile
+        function updateUserProfile() {
+            if (currentUser) {
+                document.getElementById('user-name').textContent = currentUser.name;
+                document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=3b82f6&color=fff`;
+            }
+        }
+
+        // Set minimum date to today
+        document.getElementById('due_date').min = new Date().toISOString().split('T')[0];
+
+        // Handle form submission
+        document.getElementById('addTaskForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const taskData = Object.fromEntries(formData);
+            
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(taskData)
+                });
+                
+                if (response.ok) {
+                    // Show success message
+                    document.getElementById('success-message').style.display = 'block';
+                    document.getElementById('error-message').style.display = 'none';
+                    
+                    // Reset form
+                    e.target.reset();
+                    
+                    // Scroll to top
+                    window.scrollTo(0, 0);
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById('success-message').style.display = 'none';
+                    }, 3000);
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to create task');
+                }
+            } catch (error) {
+                // Show error message
+                document.getElementById('error-text').textContent = error.message;
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('success-message').style.display = 'none';
+                window.scrollTo(0, 0);
+            } finally {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Profile dropdown functionality
+        document.querySelector('.profile-dropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function() {
+            document.querySelector('.dropdown-menu').classList.remove('show');
+        });
+
+        // Logout
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            window.location.href = '/auth.html';
+        });
+
+        // Edit profile
+        document.getElementById('edit-profile').addEventListener('click', function(e) {
+            e.preventDefault();
+            const newName = prompt('Enter new name:', currentUser.name);
+            if (newName && newName.trim()) {
+                currentUser.name = newName.trim();
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                updateUserProfile();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

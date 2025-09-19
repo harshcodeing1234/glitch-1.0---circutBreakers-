@@ -11,16 +11,16 @@
     <div class="sidebar">
         <div class="logo">
             <i class="fas fa-tasks"></i>
-            <span>Project Pulse</span>
+            <span>Group project task claimer</span>
         </div>
         <nav>
             <ul>
-                <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-tasks"></i> Tasks</a></li>
-                <li><a href="#"><i class="fas fa-plus"></i> Add Task</a></li>
-                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
-                <li><a href="#"><i class="fas fa-users"></i> Team</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="add-task.html"><i class="fas fa-plus"></i> Add Task</a></li>
+                <li><a href="/analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="/team.html"><i class="fas fa-users"></i> Team</a></li>
+                <li><a href="/settings.html"><i class="fas fa-cog"></i> Settings</a></li>
             </ul>
         </nav>
     </div>
@@ -37,12 +37,18 @@
                     <span class="badge">3</span>
                 </div>
                 <div class="profile">
-                    <img src="https://via.placeholder.com/40" alt="Profile">
+                    <img src="https://via.placeholder.com/40" alt="Profile" id="profile-img">
                     <div class="profile-info">
-                        <span class="name">John Doe</span>
-                        <span class="role">Project Manager</span>
+                        <span class="name" id="user-name">Loading...</span>
+                        <span class="role">Team Member</span>
                     </div>
-                    <i class="fas fa-chevron-down"></i>
+                    <div class="profile-dropdown">
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown-menu">
+                            <a href="#" id="edit-profile">Edit Profile</a>
+                            <a href="#" id="logout">Logout</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -81,8 +87,8 @@
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>8</h3>
-                        <p>Team Members</p>
+                        <h3>0</h3>
+                        <p>My Tasks</p>
                     </div>
                 </div>
             </div>
@@ -97,105 +103,12 @@
             </div>
 
             <div class="tasks-grid">
-                <div class="task-card unclaimed">
-                    <div class="task-header">
-                        <h3>Frontend Development</h3>
-                        <span class="priority high">High</span>
-                    </div>
-                    <p class="task-description">Build responsive user interface with React components</p>
-                    <div class="task-meta">
-                        <span><i class="fas fa-calendar"></i> Due: Oct 15</span>
-                        <span><i class="fas fa-user"></i> Unassigned</span>
-                    </div>
-                    <div class="task-footer">
-                        <span class="status unclaimed">Unclaimed</span>
-                        <button class="claim-btn">Claim Task</button>
-                    </div>
-                </div>
-
-                <div class="task-card claimed">
-                    <div class="task-header">
-                        <h3>API Integration</h3>
-                        <span class="priority medium">Medium</span>
-                    </div>
-                    <p class="task-description">Connect frontend to backend services with proper error handling</p>
-                    <div class="task-meta">
-                        <span><i class="fas fa-calendar"></i> Due: Oct 18</span>
-                        <span><i class="fas fa-user"></i> Sarah Johnson</span>
-                    </div>
-                    <div class="task-footer">
-                        <span class="status claimed">Claimed by Sarah</span>
-                        <button class="claim-btn claimed">Unclaim</button>
-                    </div>
-                </div>
-
-                <div class="task-card unclaimed">
-                    <div class="task-header">
-                        <h3>Database Design</h3>
-                        <span class="priority high">High</span>
-                    </div>
-                    <p class="task-description">Design and implement database schema with proper relationships</p>
-                    <div class="task-meta">
-                        <span><i class="fas fa-calendar"></i> Due: Oct 12</span>
-                        <span><i class="fas fa-user"></i> Unassigned</span>
-                    </div>
-                    <div class="task-footer">
-                        <span class="status unclaimed">Unclaimed</span>
-                        <button class="claim-btn">Claim Task</button>
-                    </div>
-                </div>
-
-                <div class="task-card claimed">
-                    <div class="task-header">
-                        <h3>Testing & QA</h3>
-                        <span class="priority low">Low</span>
-                    </div>
-                    <p class="task-description">Write comprehensive tests and perform quality assurance</p>
-                    <div class="task-meta">
-                        <span><i class="fas fa-calendar"></i> Due: Oct 25</span>
-                        <span><i class="fas fa-user"></i> Mike Chen</span>
-                    </div>
-                    <div class="task-footer">
-                        <span class="status claimed">Claimed by Mike</span>
-                        <button class="claim-btn claimed">Unclaim</button>
-                    </div>
-                </div>
-
-                <div class="task-card unclaimed">
-                    <div class="task-header">
-                        <h3>Documentation</h3>
-                        <span class="priority medium">Medium</span>
-                    </div>
-                    <p class="task-description">Create user guides and technical documentation</p>
-                    <div class="task-meta">
-                        <span><i class="fas fa-calendar"></i> Due: Oct 30</span>
-                        <span><i class="fas fa-user"></i> Unassigned</span>
-                    </div>
-                    <div class="task-footer">
-                        <span class="status unclaimed">Unclaimed</span>
-                        <button class="claim-btn">Claim Task</button>
-                    </div>
-                </div>
-
-                <div class="task-card claimed">
-                    <div class="task-header">
-                        <h3>Deployment Setup</h3>
-                        <span class="priority high">High</span>
-                    </div>
-                    <p class="task-description">Configure CI/CD pipeline and production environment</p>
-                    <div class="task-meta">
-                        <span><i class="fas fa-calendar"></i> Due: Nov 5</span>
-                        <span><i class="fas fa-user"></i> Alex Rodriguez</span>
-                    </div>
-                    <div class="task-footer">
-                        <span class="status claimed">Claimed by Alex</span>
-                        <button class="claim-btn claimed">Unclaim</button>
-                    </div>
-                </div>
+                <!-- Tasks will be loaded dynamically from the database -->
             </div>
         </main>
     </div>
 
     <script src="script.js"></script>
+    <script src="notifications.js"></script>
 </body>
 </html>

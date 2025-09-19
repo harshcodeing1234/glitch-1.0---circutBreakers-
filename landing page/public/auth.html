@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Pulse - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        
+        .auth-container { 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem; 
+            border-radius: 20px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            width: 100%; 
+            max-width: 420px;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-header { 
+            text-align: center; 
+            margin-bottom: 2.5rem; 
+        }
+        
+        .auth-header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .auth-header .logo i {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .auth-header h1 { 
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .auth-header p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+        
+        .form-group { 
+            margin-bottom: 1.5rem; 
+            position: relative;
+        }
+        
+        .form-group label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+        
+        .form-group input { 
+            width: 100%; 
+            padding: 1rem 1rem 1rem 3rem; 
+            border: 2px solid #e5e7eb; 
+            border-radius: 12px; 
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: white;
+        }
+        
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 2.25rem;
+            color: #9ca3af;
+            font-size: 1.1rem;
+        }
+        
+        .btn { 
+            width: 100%; 
+            padding: 1rem; 
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer; 
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .toggle-auth { 
+            text-align: center; 
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        .toggle-auth a { 
+            color: #3b82f6; 
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .toggle-auth a:hover {
+            color: #2563eb;
+        }
+        
+        .error { 
+            color: #ef4444; 
+            font-size: 0.875rem; 
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .hidden { 
+            display: none; 
+        }
+        
+        .features {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            z-index: 2;
+        }
+        
+        .features h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .features ul {
+            list-style: none;
+        }
+        
+        .features li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .features li i {
+            color: #10b981;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .features {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- <div class="features">
+        <h3>Project Pulse</h3>
+        <ul>
+            <li><i class="fas fa-check-circle"></i> Task Management</li>
+            <li><i class="fas fa-check-circle"></i> Team Collaboration</li>
+            <li><i class="fas fa-check-circle"></i> Real-time Updates</li>
+            <li><i class="fas fa-check-circle"></i> Progress Tracking</li>
+        </ul>
+    </div> -->
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="logo">
+                <i class="fas fa-tasks"></i>
+                <h1>Group project task claimer</h1>
+            </div>
+            <p id="auth-subtitle">Sign in to your account</p>
+        </div>
+
+        <form id="auth-form">
+            <div class="form-group hidden" id="name-group">
+                <label for="name">Full Name</label>
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            
+            <div id="error-message" class="error hidden"></div>
+            
+            <button type="submit" class="btn" id="auth-btn">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+
+        <div class="toggle-auth">
+            <span id="toggle-text">Don't have an account?</span>
+            <a href="#" id="toggle-link">Sign up</a>
+        </div>
+    </div>
+
+    <script>
+        let isLogin = true;
+
+        document.getElementById('toggle-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            isLogin = !isLogin;
+            
+            const nameGroup = document.getElementById('name-group');
+            const authBtn = document.getElementById('auth-btn');
+            const authSubtitle = document.getElementById('auth-subtitle');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleLink = document.getElementById('toggle-link');
+            
+            if (isLogin) {
+                nameGroup.classList.add('hidden');
+                authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+                authSubtitle.textContent = 'Sign in to your account';
+                toggleText.textContent = "Don't have an account?";
+                toggleLink.textContent = 'Sign up';
+            } else {
+                nameGroup.classList.remove('hidden');
+                authBtn.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
+                authSubtitle.textContent = 'Create your account';
+                toggleText.textContent = 'Already have an account?';
+                toggleLink.textContent = 'Sign in';
+            }
+        });
+
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            const errorDiv = document.getElementById('error-message');
+            const submitBtn = document.getElementById('auth-btn');
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please wait...';
+            submitBtn.disabled = true;
+            errorDiv.classList.add('hidden');
+            
+            try {
+                const endpoint = isLogin ? '/api/login' : '/api/register';
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    errorDiv.textContent = result.error;
+                    errorDiv.classList.remove('hidden');
+                    submitBtn.innerHTML = isLogin ? '<i class="fas fa-sign-in-alt"></i> Sign In' : '<i class="fas fa-user-plus"></i> Sign Up';
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Connection error. Please try again.';
+                errorDiv.classList.remove('hidden');
+                submitBtn.innerHTML = isLogin ? '<i class="fas fa-sign-in-alt"></i> Sign In' : '<i class="fas fa-user-plus"></i> Sign Up';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Check if user is already logged in
+        if (localStorage.getItem('user')) {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

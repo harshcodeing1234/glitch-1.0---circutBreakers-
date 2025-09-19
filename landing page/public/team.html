@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Pulse - Team</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .add-member-btn { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .member-card { background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+        .member-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1rem; }
+        .member-name { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .member-email { color: var(--text-light); margin-bottom: 1rem; }
+        .member-stats { display: flex; justify-content: space-around; margin-bottom: 1rem; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.875rem; color: var(--text-light); }
+        .member-actions { display: flex; gap: 0.5rem; justify-content: center; }
+        .btn-small { padding: 0.375rem 0.75rem; font-size: 0.875rem; border: none; border-radius: 0.375rem; cursor: pointer; }
+        .btn-view { background: var(--primary); color: white; }
+        .btn-remove { background: var(--danger); color: white; }
+        .team-summary { background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .summary-item { text-align: center; }
+        .summary-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .summary-label { color: var(--text-light); margin-top: 0.25rem; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal-content { background: white; margin: 5% auto; padding: 2rem; border-radius: 0.75rem; width: 90%; max-width: 500px; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; }
+        .form-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; }
+        .member-tasks { margin-top: 1rem; }
+        .task-item { background: var(--background); padding: 0.5rem; border-radius: 0.375rem; margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .task-priority { padding: 0.125rem 0.5rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; }
+        .priority-high { background: #fee2e2; color: #dc2626; }
+        .priority-medium { background: #fef3c7; color: #d97706; }
+        .priority-low { background: #dcfce7; color: #16a34a; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-tasks"></i>
+            <span>Project Pulse</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="/add-task.html"><i class="fas fa-plus"></i> Add Task</a></li>
+                <li><a href="/analytics.html"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="/team.html" class="active"><i class="fas fa-users"></i> Team</a></li>
+                <li><a href="/settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <h1>Team</h1>
+                <p>Manage team members and track performance</p>
+            </div>
+            <div class="header-right">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="profile">
+                    <img src="https://via.placeholder.com/40" alt="Profile" id="profile-img">
+                    <div class="profile-info">
+                        <span class="name" id="user-name">Loading...</span>
+                        <span class="role">Team Member</span>
+                    </div>
+                    <div class="profile-dropdown">
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown-menu">
+                            <a href="#" id="edit-profile">Edit Profile</a>
+                            <a href="#" id="logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Team Summary -->
+            <div class="team-summary">
+                <h2 style="margin-bottom: 1rem;">Team Overview</h2>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value" id="total-members">0</div>
+                        <div class="summary-label">Total Members</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="active-members">0</div>
+                        <div class="summary-label">Active Members</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="total-tasks-claimed">0</div>
+                        <div class="summary-label">Tasks Claimed</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="avg-tasks-per-member">0</div>
+                        <div class="summary-label">Avg Tasks/Member</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Header -->
+            <div class="team-header">
+                <h2>Team Members</h2>
+                <button class="add-member-btn" onclick="openMemberModal()">
+                    <i class="fas fa-plus"></i> Add Member
+                </button>
+            </div>
+
+            <!-- Team Grid -->
+            <div class="team-grid" id="team-container">
+                <!-- Team members will be loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Member Modal -->
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Add Team Member</h2>
+            <form id="memberForm">
+                <div class="form-group">
+                    <label for="member-name">Full Name</label>
+                    <input type="text" id="member-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="member-email">Email</label>
+                    <input type="email" id="member-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="member-password">Password</label>
+                    <input type="password" id="member-password" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-small" onclick="closeMemberModal()">Cancel</button>
+                    <button type="submit" class="btn-small btn-view">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Member Details Modal -->
+    <div id="memberDetailsModal" class="modal">
+        <div class="modal-content">
+            <h2 id="details-title">Member Details</h2>
+            <div id="member-details-content">
+                <!-- Member details will be loaded here -->
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-small" onclick="closeMemberDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let users = [];
+        let tasks = [];
+
+        // Check authentication
+        function checkAuth() {
+            const userData = localStorage.getItem('user');
+            if (!userData) {
+                window.location.href = '/auth.html';
+                return false;
+            }
+            currentUser = JSON.parse(userData);
+            updateUserProfile();
+            return true;
+        }
+
+        // Update user profile
+        function updateUserProfile() {
+            if (currentUser) {
+                document.getElementById('user-name').textContent = currentUser.name;
+                document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=3b82f6&color=fff`;
+            }
+        }
+
+        // Load data
+        async function loadData() {
+            try {
+                const [usersResponse, tasksResponse] = await Promise.all([
+                    fetch('/api/users'),
+                    fetch('/api/tasks')
+                ]);
+                
+                users = await usersResponse.json();
+                tasks = await tasksResponse.json();
+                
+                updateSummary();
+                renderTeamMembers();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Update team summary
+        function updateSummary() {
+            const totalMembers = users.length;
+            const activeMembers = new Set(tasks.filter(t => t.claimed_by_id).map(t => t.claimed_by_id)).size;
+            const totalTasksClaimed = tasks.filter(t => t.status === 'claimed').length;
+            const avgTasksPerMember = activeMembers > 0 ? Math.round(totalTasksClaimed / activeMembers) : 0;
+
+            document.getElementById('total-members').textContent = totalMembers;
+            document.getElementById('active-members').textContent = activeMembers;
+            document.getElementById('total-tasks-claimed').textContent = totalTasksClaimed;
+            document.getElementById('avg-tasks-per-member').textContent = avgTasksPerMember;
+        }
+
+        // Render team members
+        function renderTeamMembers() {
+            const container = document.getElementById('team-container');
+            container.innerHTML = '';
+
+            users.forEach(user => {
+                const userTasks = tasks.filter(t => t.claimed_by_id === user.id);
+                const claimedTasks = userTasks.length;
+                const highPriorityTasks = userTasks.filter(t => t.priority === 'high').length;
+
+                const memberCard = document.createElement('div');
+                memberCard.className = 'member-card';
+                memberCard.innerHTML = `
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=3b82f6&color=fff" 
+                         alt="${user.name}" class="member-avatar">
+                    <div class="member-name">${user.name}</div>
+                    <div class="member-email">${user.email}</div>
+                    
+                    <div class="member-stats">
+                        <div class="stat">
+                            <div class="stat-value">${claimedTasks}</div>
+                            <div class="stat-label">Tasks</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${highPriorityTasks}</div>
+                            <div class="stat-label">High Priority</div>
+                        </div>
+                    </div>
+                    
+                    <div class="member-actions">
+                        <button class="btn-small btn-view" onclick="viewMemberDetails(${user.id})">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        ${user.id !== currentUser.id ? `
+                            <button class="btn-small btn-remove" onclick="removeMember(${user.id})">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(memberCard);
+            });
+        }
+
+        // Open member modal
+        function openMemberModal() {
+            document.getElementById('memberModal').style.display = 'block';
+            document.getElementById('memberForm').reset();
+        }
+
+        // Close member modal
+        function closeMemberModal() {
+            document.getElementById('memberModal').style.display = 'none';
+        }
+
+        // View member details
+        function viewMemberDetails(userId) {
+            const user = users.find(u => u.id === userId);
+            const userTasks = tasks.filter(t => t.claimed_by_id === userId);
+            
+            const content = document.getElementById('member-details-content');
+            content.innerHTML = `
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=3b82f6&color=fff" 
+                         alt="${user.name}" style="width: 80px; height: 80px; border-radius: 50%;">
+                    <h3 style="margin: 0.5rem 0;">${user.name}</h3>
+                    <p style="color: var(--text-light);">${user.email}</p>
+                </div>
+                
+                <div class="member-tasks">
+                    <h4>Assigned Tasks (${userTasks.length})</h4>
+                    ${userTasks.length > 0 ? userTasks.map(task => `
+                        <div class="task-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>${task.title}</span>
+                                <span class="task-priority priority-${task.priority}">${task.priority}</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 0.25rem;">
+                                Due: ${task.due_date}
+                            </div>
+                        </div>
+                    `).join('') : '<p style="color: var(--text-light);">No tasks assigned</p>'}
+                </div>
+            `;
+            
+            document.getElementById('details-title').textContent = `${user.name} - Details`;
+            document.getElementById('memberDetailsModal').style.display = 'block';
+        }
+
+        // Close member details modal
+        function closeMemberDetailsModal() {
+            document.getElementById('memberDetailsModal').style.display = 'none';
+        }
+
+        // Remove member
+        async function removeMember(userId) {
+            const user = users.find(u => u.id === userId);
+            if (confirm(`Are you sure you want to remove ${user.name} from the team?`)) {
+                try {
+                    await fetch(`/api/users/${userId}`, { method: 'DELETE' });
+                    loadData();
+                } catch (error) {
+                    console.error('Error removing member:', error);
+                }
+            }
+        }
+
+        // Handle member form submission
+        document.getElementById('memberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const memberData = {
+                name: document.getElementById('member-name').value,
+                email: document.getElementById('member-email').value,
+                password: document.getElementById('member-password').value
+            };
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(memberData)
+                });
+                
+                if (response.ok) {
+                    closeMemberModal();
+                    loadData();
+                } else {
+                    const error = await response.json();
+                    alert(error.error);
+                }
+            } catch (error) {
+                console.error('Error adding member:', error);
+            }
+        });
+
+        // Profile dropdown
+        document.querySelector('.profile-dropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function() {
+            document.querySelector('.dropdown-menu').classList.remove('show');
+        });
+
+        // Logout
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            window.location.href = '/auth.html';
+        });
+
+        // Edit profile
+        document.getElementById('edit-profile').addEventListener('click', function(e) {
+            e.preventDefault();
+            const newName = prompt('Enter new name:', currentUser.name);
+            if (newName && newName.trim()) {
+                currentUser.name = newName.trim();
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                updateUserProfile();
+            }
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const memberModal = document.getElementById('memberModal');
+            const detailsModal = document.getElementById('memberDetailsModal');
+            if (event.target === memberModal) {
+                closeMemberModal();
+            }
+            if (event.target === detailsModal) {
+                closeMemberDetailsModal();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth()) {
+                loadData();
+            }
+        });
+    </script>
+</body>
+</html>

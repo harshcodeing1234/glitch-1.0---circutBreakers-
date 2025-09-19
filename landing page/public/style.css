@@ -157,6 +157,7 @@ header {
     padding: 0.5rem;
     border-radius: 0.5rem;
     transition: background 0.2s;
+    position: relative;
 }
 
 .profile:hover {
@@ -182,6 +183,39 @@ header {
 .profile-info .role {
     color: var(--text-light);
     font-size: 0.75rem;
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 150px;
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background: var(--background);
+}
+
+.dropdown-menu.show {
+    display: block;
 }
 
 /* Main Content Area */

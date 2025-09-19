@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Pulse - Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .chart-container { background: white; padding: 1rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); height: 300px; }
+        .chart-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text); }
+        .chart-canvas { height: 250px !important; }
+        .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .metric-card { background: white; padding: 1rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+        .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .metric-label { color: var(--text-light); margin-top: 0.25rem; font-size: 0.875rem; }
+        .progress-bar { width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 0.5rem; }
+        .progress-fill { height: 100%; background: var(--primary); transition: width 0.3s; }
+        .team-list { background: white; padding: 1rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .team-member { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .team-member:last-child { border-bottom: none; }
+        .member-info { display: flex; align-items: center; gap: 0.5rem; }
+        .member-avatar { width: 28px; height: 28px; border-radius: 50%; }
+        .member-stats { text-align: right; }
+        .task-count { font-weight: 600; color: var(--primary); }
+        @media (max-width: 768px) {
+            .analytics-grid { grid-template-columns: 1fr; }
+            .metrics-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-tasks"></i>
+            <span>Project Pulse</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/tasks.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="/add-task.html"><i class="fas fa-plus"></i> Add Task</a></li>
+                <li><a href="/analytics.html" class="active"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="/team.html"><i class="fas fa-users"></i> Team</a></li>
+                <li><a href="/settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div class="header-left">
+                <h1>Analytics</h1>
+                <p>Project insights and performance metrics</p>
+            </div>
+            <div class="header-right">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="profile">
+                    <img src="https://via.placeholder.com/40" alt="Profile" id="profile-img">
+                    <div class="profile-info">
+                        <span class="name" id="user-name">Loading...</span>
+                        <span class="role">Team Member</span>
+                    </div>
+                    <div class="profile-dropdown">
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown-menu">
+                            <a href="#" id="edit-profile">Edit Profile</a>
+                            <a href="#" id="logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Key Metrics -->
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value" id="total-tasks">0</div>
+                    <div class="metric-label">Total Tasks</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="completion-rate">0%</div>
+                    <div class="metric-label">Completion Rate</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="completion-progress"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="active-members">0</div>
+                    <div class="metric-label">Active Members</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="avg-completion">0</div>
+                    <div class="metric-label">Avg Tasks/Member</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="analytics-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Task Status Distribution</div>
+                    <canvas id="statusChart" class="chart-canvas"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Priority Breakdown</div>
+                    <canvas id="priorityChart" class="chart-canvas"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Tasks by Category</div>
+                    <canvas id="categoryChart" class="chart-canvas"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Team Performance</div>
+                    <canvas id="teamChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Team Performance -->
+            <div class="team-list">
+                <div class="chart-title">Team Member Performance</div>
+                <div id="team-performance">
+                    <!-- Team members will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let tasks = [];
+        let users = [];
+
+        // Check authentication
+        function checkAuth() {
+            const userData = localStorage.getItem('user');
+            if (!userData) {
+                window.location.href = '/auth.html';
+                return false;
+            }
+            currentUser = JSON.parse(userData);
+            updateUserProfile();
+            return true;
+        }
+
+        // Update user profile
+        function updateUserProfile() {
+            if (currentUser) {
+                document.getElementById('user-name').textContent = currentUser.name;
+                document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=3b82f6&color=fff`;
+            }
+        }
+
+        // Load data
+        async function loadData() {
+            try {
+                const response = await fetch('/api/analytics/overview');
+                const analytics = await response.json();
+                
+                updateMetrics(analytics.totalStats);
+                createCharts(analytics);
+                updateTeamPerformance(analytics.teamPerformance);
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Update key metrics
+        function updateMetrics(stats) {
+            const totalTasks = stats.totalTasks || 0;
+            const claimedTasks = stats.claimedTasks || 0;
+            const completionRate = totalTasks > 0 ? Math.round((claimedTasks / totalTasks) * 100) : 0;
+            const activeMembers = stats.activeMembers || 0;
+            const avgCompletion = activeMembers > 0 ? Math.round(claimedTasks / activeMembers) : 0;
+
+            document.getElementById('total-tasks').textContent = totalTasks;
+            document.getElementById('completion-rate').textContent = completionRate + '%';
+            document.getElementById('completion-progress').style.width = completionRate + '%';
+            document.getElementById('active-members').textContent = activeMembers;
+            document.getElementById('avg-completion').textContent = avgCompletion;
+        }
+
+        // Create charts
+        function createCharts(analytics) {
+            createStatusChart(analytics.tasksByStatus);
+            createPriorityChart(analytics.tasksByPriority);
+            createCategoryChart(analytics.tasksByCategory);
+            createTeamChart(analytics.teamPerformance);
+        }
+
+        // Status distribution chart
+        function createStatusChart(statusData) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            const claimed = statusData.find(s => s.status === 'claimed')?.count || 0;
+            const unclaimed = statusData.find(s => s.status === 'unclaimed')?.count || 0;
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Claimed', 'Unclaimed'],
+                    datasets: [{
+                        data: [claimed, unclaimed],
+                        backgroundColor: ['#3b82f6', '#e2e8f0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { 
+                            position: 'bottom',
+                            labels: { boxWidth: 12, fontSize: 10 }
+                        } 
+                    }
+                }
+            });
+        }
+
+        // Priority breakdown chart
+        function createPriorityChart(priorityData) {
+            const ctx = document.getElementById('priorityChart').getContext('2d');
+            const high = priorityData.find(p => p.priority === 'high')?.count || 0;
+            const medium = priorityData.find(p => p.priority === 'medium')?.count || 0;
+            const low = priorityData.find(p => p.priority === 'low')?.count || 0;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['High', 'Medium', 'Low'],
+                    datasets: [{
+                        data: [high, medium, low],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            ticks: { fontSize: 10 }
+                        },
+                        x: {
+                            ticks: { fontSize: 10 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Category chart
+        function createCategoryChart(categoryData) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            const labels = categoryData.map(c => c.category);
+            const data = categoryData.map(c => c.count);
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { 
+                            position: 'bottom',
+                            labels: { boxWidth: 12, fontSize: 10 }
+                        } 
+                    }
+                }
+            });
+        }
+
+        // Team performance chart
+        function createTeamChart(teamData) {
+            const ctx = document.getElementById('teamChart').getContext('2d');
+            const labels = teamData.map(t => t.name);
+            const data = teamData.map(t => t.count);
+
+            new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Tasks',
+                        data: data,
+                        backgroundColor: '#3b82f6',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        x: { 
+                            beginAtZero: true,
+                            ticks: { fontSize: 10 }
+                        },
+                        y: {
+                            ticks: { fontSize: 10 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update team performance list
+        function updateTeamPerformance(teamData) {
+            const container = document.getElementById('team-performance');
+            
+            container.innerHTML = teamData
+                .sort((a, b) => b.count - a.count)
+                .map(member => `
+                    <div class="team-member">
+                        <div class="member-info">
+                            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=3b82f6&color=fff" 
+                                 alt="${member.name}" class="member-avatar">
+                            <div>
+                                <div style="font-weight: 500;">${member.name}</div>
+                                <div style="font-size: 0.875rem; color: var(--text-light);">
+                                    Active contributor
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-stats">
+                            <div class="task-count">${member.count}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-light);">tasks</div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // Profile dropdown
+        document.querySelector('.profile-dropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', function() {
+            document.querySelector('.dropdown-menu').classList.remove('show');
+        });
+
+        // Logout
+        document.getElementById('logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            window.location.href = '/auth.html';
+        });
+
+        // Edit profile
+        document.getElementById('edit-profile').addEventListener('click', function(e) {
+            e.preventDefault();
+            const newName = prompt('Enter new name:', currentUser.name);
+            if (newName && newName.trim()) {
+                currentUser.name = newName.trim();
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                updateUserProfile();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth()) {
+                loadData();
+            }
+        });
+    </script>
+</body>
+</html>
